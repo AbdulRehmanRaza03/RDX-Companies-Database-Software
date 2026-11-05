@@ -20,7 +20,17 @@ rdx-leadflow/
 
 - [Architecture](docs/architecture/README.md)
 - [Database design](docs/database/README.md)
+- [ER diagram](docs/database/er-diagram.md)
+- [Data dictionary](docs/database/data-dictionary-summary.md)
 - [API reference](docs/api/README.md)
+- [Installation guide](docs/architecture/installation-guide.md)
+- [Backup & restore](docs/database/backup-restore.md)
+- [Phase checklist](docs/architecture/phase-checklist.md)
+
+## Status
+
+Backend complete: 48 database tables, 42 API routes, 8 passing tests, all 8 phases'
+backend scope delivered. Frontend UI pending.
 
 ## Prerequisites
 

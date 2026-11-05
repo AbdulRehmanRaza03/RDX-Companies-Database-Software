@@ -6,6 +6,7 @@ from app.api.v1.routers import (
     campaigns,
     companies,
     contacts,
+    dashboard,
     deals,
     finance,
     health,
@@ -21,3 +22,4 @@ api_router.include_router(deals.router)
 api_router.include_router(work.router)
 api_router.include_router(campaigns.router)
 api_router.include_router(finance.router)
+api_router.include_router(dashboard.router)

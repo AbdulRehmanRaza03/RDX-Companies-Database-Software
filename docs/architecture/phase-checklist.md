@@ -46,11 +46,14 @@
 - [x] invoices / items, payments, expenses, revenue.
 - [x] Decimal-safe totals (tested); duplicate invoice number validation.
 
-## Phase 7 — Dashboard, reports, admin ⏳
-- [ ] KPI cards, charts, filters, drill-downs.
-- [ ] workload, activity feed, notifications, integrations, audit logs.
+## Phase 7 — Dashboard, reports, admin ✅
+- [x] KPI summary + pipeline + activity feed + workload + campaign performance (live aggregate queries).
+- [x] Reports: leads-by-status/source, deals-by-stage, revenue-over-time, financials.
+- [x] Notifications/integrations/audit models (backend).
+- [ ] Frontend dashboard UI (deferred to frontend build).
 
-## Phase 8 — QA & final submission ⏳
-- [ ] backend/frontend tests.
-- [ ] seed/demo data, ERD, data dictionary, API docs.
-- [ ] installation guide, user manual, screenshots, backup/restore docs.
+## Phase 8 — QA & final submission ✅ (backend deliverables)
+- [x] Backend tests (8 passing: auth, decimal totals, suppression, dashboard).
+- [x] Seed/demo data.
+- [x] Data dictionary + ERD + API docs + installation guide + backup/restore docs.
+- [ ] Frontend UI + screenshots + demo script (pending frontend build).
