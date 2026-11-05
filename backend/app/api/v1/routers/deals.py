@@ -61,6 +61,16 @@ def update_deal(
     return deal_service.update_deal(db, organization_id, deal_id, data, profile.id)
 
 
+@router.delete("/{deal_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_deal(
+    deal_id: uuid.UUID,
+    organization_id: uuid.UUID = Query(...),
+    db: Session = Depends(get_db),
+    profile: Profile = Depends(get_current_profile),
+):
+    deal_service.delete_deal(db, organization_id, deal_id)
+
+
 @router.get("/{deal_id}/history", response_model=list[dict])
 def stage_history(
     organization_id: uuid.UUID,

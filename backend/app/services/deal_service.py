@@ -124,6 +124,12 @@ def update_deal(
     return deal
 
 
+def delete_deal(db: Session, organization_id: uuid.UUID, deal_id: uuid.UUID) -> None:
+    deal = get_deal(db, organization_id, deal_id)
+    db.delete(deal)
+    db.commit()
+
+
 def get_stage_history(db: Session, organization_id: uuid.UUID, deal_id: uuid.UUID):
     deal = get_deal(db, organization_id, deal_id)
     rows = db.scalars(

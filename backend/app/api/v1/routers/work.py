@@ -62,6 +62,16 @@ def update_task(
     return work_service.update_task(db, organization_id, task_id, data)
 
 
+@router.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(
+    task_id: uuid.UUID,
+    organization_id: uuid.UUID = Query(...),
+    db: Session = Depends(get_db),
+    profile: Profile = Depends(get_current_profile),
+):
+    work_service.delete_task(db, organization_id, task_id)
+
+
 # --- Notes ---
 @router.get("/notes", response_model=list[NoteOut])
 def list_notes(

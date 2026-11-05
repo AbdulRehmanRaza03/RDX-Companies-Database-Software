@@ -48,6 +48,14 @@ def update_task(db: Session, organization_id: uuid.UUID, task_id: uuid.UUID, dat
     return task
 
 
+def delete_task(db: Session, organization_id: uuid.UUID, task_id: uuid.UUID) -> None:
+    task = db.get(Task, task_id)
+    if task is None or task.organization_id != organization_id:
+        raise HTTPException(status_code=404, detail="Task not found")
+    db.delete(task)
+    db.commit()
+
+
 # --- Notes ---
 def list_notes(db: Session, organization_id: uuid.UUID, noteable_type: str, noteable_id: uuid.UUID):
     rows = db.scalars(
