@@ -29,8 +29,8 @@ rdx-leadflow/
 
 ## Status
 
-Backend complete: 48 database tables, 42 API routes, 8 passing tests, all 8 phases'
-backend scope delivered. Frontend UI pending.
+Backend complete (48 tables, 43 API routes, 8 tests). Frontend complete
+(login, dashboard, and all module UIs). See `docs/` for details.
 
 ## Prerequisites
 

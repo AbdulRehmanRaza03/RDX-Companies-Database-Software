@@ -1,40 +1,55 @@
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './lib/auth.jsx'
+import Layout from './layout/Layout.jsx'
+import Login from './pages/Login.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Companies from './pages/Companies.jsx'
+import Contacts from './pages/Contacts.jsx'
+import Deals from './pages/Deals.jsx'
+import Tasks from './pages/Tasks.jsx'
+import Campaigns from './pages/Campaigns.jsx'
+import Finance from './pages/Finance.jsx'
+import Reports from './pages/Reports.jsx'
 
-async function fetchHealth() {
-  const { data } = await axios.get('/api/v1/health')
-  return data
+function Protected({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-ink-400">
+        Loading…
+      </div>
+    )
+  }
+  if (!user) return <Navigate to="/login" replace />
+  return children
 }
 
 export default function App() {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['health'],
-    queryFn: fetchHealth,
-    refetchOnWindowFocus: false,
-  })
-
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
-      <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-semibold text-slate-900">RDX LeadFlow</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Foundation health check
-        </p>
-
-        <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
-          {isLoading && <p className="text-slate-500">Checking backend…</p>}
-          {isError && (
-            <p className="text-red-600">
-              Backend unreachable: {error?.message}
-            </p>
-          )}
-          {data && (
-            <p className="font-medium text-emerald-600">
-              Status: {data.status}
-            </p>
-          )}
-        </div>
-      </div>
-    </main>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <Protected>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </Protected>
+            }
+          />
+          <Route path="/companies" element={<Protected><Layout><Companies /></Layout></Protected>} />
+          <Route path="/contacts" element={<Protected><Layout><Contacts /></Layout></Protected>} />
+          <Route path="/deals" element={<Protected><Layout><Deals /></Layout></Protected>} />
+          <Route path="/tasks" element={<Protected><Layout><Tasks /></Layout></Protected>} />
+          <Route path="/campaigns" element={<Protected><Layout><Campaigns /></Layout></Protected>} />
+          <Route path="/finance" element={<Protected><Layout><Finance /></Layout></Protected>} />
+          <Route path="/reports" element={<Protected><Layout><Reports /></Layout></Protected>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }

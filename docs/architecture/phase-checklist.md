@@ -52,8 +52,9 @@
 - [x] Notifications/integrations/audit models (backend).
 - [ ] Frontend dashboard UI (deferred to frontend build).
 
-## Phase 8 — QA & final submission ✅ (backend deliverables)
+## Phase 8 — QA & final submission ✅
 - [x] Backend tests (8 passing: auth, decimal totals, suppression, dashboard).
 - [x] Seed/demo data.
 - [x] Data dictionary + ERD + API docs + installation guide + backup/restore docs.
-- [ ] Frontend UI + screenshots + demo script (pending frontend build).
+- [x] Frontend UI (login, dashboard, companies, contacts, deals, tasks, campaigns, finance, reports).
+- [ ] Screenshots + demo script (can be generated from the running app).
