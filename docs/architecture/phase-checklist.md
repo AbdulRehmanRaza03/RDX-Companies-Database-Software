@@ -35,20 +35,22 @@
 - [x] activities / tasks / notes / meetings (backend).
 - [ ] Frontend UI for CRM + sales modules (deferred to frontend build phase).
 
-## Phase 5 — Campaign management
-- [ ] campaigns / channels / templates / steps / enrollments.
-- [ ] email messages/events, suppression list, sender accounts.
+## Phase 5 — Campaign management ✅
+- [x] campaigns / channels / templates / steps / enrollments.
+- [x] email messages/events, suppression list, sender accounts.
+- [x] Suppression enforced before enrollment (tested).
 
-## Phase 6 — Client delivery & finance
-- [ ] services / client services / requirements.
-- [ ] proposals / items, contracts / items.
-- [ ] invoices / items, payments, expenses, revenue.
+## Phase 6 — Client delivery & finance ✅
+- [x] services / client services / requirements.
+- [x] proposals / items, contracts / items.
+- [x] invoices / items, payments, expenses, revenue.
+- [x] Decimal-safe totals (tested); duplicate invoice number validation.
 
-## Phase 7 — Dashboard, reports, admin
+## Phase 7 — Dashboard, reports, admin ⏳
 - [ ] KPI cards, charts, filters, drill-downs.
 - [ ] workload, activity feed, notifications, integrations, audit logs.
 
-## Phase 8 — QA & final submission
+## Phase 8 — QA & final submission ⏳
 - [ ] backend/frontend tests.
 - [ ] seed/demo data, ERD, data dictionary, API docs.
 - [ ] installation guide, user manual, screenshots, backup/restore docs.
