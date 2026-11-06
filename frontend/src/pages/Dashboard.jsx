@@ -17,7 +17,8 @@ import {
 } from 'recharts'
 import api from '../lib/api.js'
 import { useOrganizationId } from '../hooks/useOrganization.js'
-import { Card } from '../components/ui.jsx'
+import { useAuth } from '../lib/auth.jsx'
+import { Card, Button } from '../components/ui.jsx'
 import {
   Building2,
   Users,
@@ -30,10 +31,12 @@ import {
   Clock,
 } from 'lucide-react'
 
-const COLORS = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#0891b2', '#38bdf8']
+const COLORS = ['#2563eb', '#4f8ffc', '#84b4ff', '#0b1f3a', '#0891b2', '#b3d1ff']
 
 export default function Dashboard() {
   const { data: orgId } = useOrganizationId()
+  const { user } = useAuth()
+  const firstName = user?.first_name || 'there'
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ['dashboard', orgId],
@@ -111,13 +114,15 @@ export default function Dashboard() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">Dashboard</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-ink-900 dark:text-ink-100">
+            Welcome back, {firstName}
+          </h1>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-ink-500">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
             </span>
-            Live · real-time data updates every 5s
+            Live · {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })} · updates every 5s
           </p>
         </div>
       </div>

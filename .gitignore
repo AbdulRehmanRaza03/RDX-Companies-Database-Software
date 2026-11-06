@@ -38,5 +38,16 @@ Thumbs.db
 *.swp
 *.swo
 
+# --- Database / backups ---
+*.sql
+*.sql.gz
+*.dump
+*.backup
+backups/
+
 # --- Misc ---
 *.log
+.tmp/
+.temp/
+*.bak
+*.tmp

@@ -79,7 +79,7 @@ export default function Tasks() {
           <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-ink-700">Priority</span>
-            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm">
+            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-surface px-3 py-2 text-sm">
               <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option>
             </select>
           </label>

@@ -22,10 +22,10 @@ export function ToastProvider({ children }) {
             key={t.id}
             className={`pointer-events-auto flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-medium shadow-lg ${
               t.type === 'success'
-                ? 'border-emerald-200 bg-white text-emerald-700'
+                ? 'border-emerald-200 bg-surface text-emerald-700'
                 : t.type === 'error'
-                  ? 'border-red-200 bg-white text-red-700'
-                  : 'border-brand-200 bg-white text-brand-700'
+                  ? 'border-red-200 bg-surface text-red-700'
+                  : 'border-brand-200 bg-surface text-brand-700'
             }`}
           >
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10">

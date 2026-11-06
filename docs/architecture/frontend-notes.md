@@ -32,11 +32,17 @@ src/
 ```
 
 ## Design
-- Light-blue / white / black professional SaaS theme (brand-50…900 blues, neutral
-  ink scales).
-- Collapsible sidebar (mobile drawer), topbar, responsive grid.
+- Premium enterprise SaaS theme (Linear/HubSpot/Stripe-inspired).
+- **Palette:** Primary Navy `#0B1F3A`, Primary Blue `#2563EB`, Light Blue `#EAF2FF`,
+  Background `#F7F9FC`, Surface `#FFFFFF`, text `#172033` / `#64748B`, borders `#E5EAF1`.
+- Inter font (Google Fonts) for professional typography.
+- **Dark mode + light mode** — toggle in topbar; centralized CSS variables.
+- Collapsible sidebar (desktop `w-64 ↔ w-16`, tooltips when collapsed) + grouped nav.
+- Topbar: global search, Quick Add, notifications bell (unread badge), theme toggle,
+  profile menu.
 - Loading / empty / error states on all data views.
-- Recharts bar charts for reports.
+- Recharts charts (bar/area/pie) on dashboard + reports.
+- Fully responsive (mobile, tablet, desktop).
 
 ## Pages
 - **Login** — email/password, demo credentials pre-filled.

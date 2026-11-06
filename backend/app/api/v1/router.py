@@ -10,6 +10,7 @@ from app.api.v1.routers import (
     deals,
     finance,
     health,
+    notifications,
     organizations,
     work,
 )
@@ -25,3 +26,4 @@ api_router.include_router(campaigns.router)
 api_router.include_router(finance.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(organizations.router)
+api_router.include_router(notifications.router)

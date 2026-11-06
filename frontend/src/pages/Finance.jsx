@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../lib/api.js'
 import { useOrganizationId } from '../hooks/useOrganization.js'
+import { useToast } from '../lib/toast.jsx'
 import { Button, Input, PageHeader } from '../components/ui.jsx'
 import { DataTable, StatusBadge } from '../components/data.jsx'
 import { Modal } from '../components/modal.jsx'
@@ -52,8 +53,9 @@ export default function Finance() {
 
 function Invoices({ orgId }) {
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ company_id: '', invoice_number: '', items: [] })
+  const [form, setForm] = useState({ company_id: '', invoice_number: '', description: '', amount: '' })
   const queryClient = useQueryClient()
+  const toast = useToast()
 
   const { data: companies } = useQuery({
     queryKey: ['companies-inv', orgId],
@@ -69,9 +71,17 @@ function Invoices({ orgId }) {
 
   const create = useMutation({
     mutationFn: async () => {
-      await api.post('/invoices', { ...form, items: [{ description: 'Service', quantity: 1, unit_price: '1000' }] }, { params: { organization_id: orgId } })
+      const items = [{ description: form.description || 'Service', quantity: 1, unit_price: form.amount || '0' }]
+      await api.post('/invoices', { company_id: form.company_id, invoice_number: form.invoice_number, currency: 'USD', items }, { params: { organization_id: orgId } })
     },
-    onSuccess: () => { queryClient.invalidateQueries(['invoices']); setOpen(false) },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['invoices'])
+      queryClient.invalidateQueries(['financials'])
+      toast('Invoice created', 'success')
+      setOpen(false)
+      setForm({ company_id: '', invoice_number: '', description: '', amount: '' })
+    },
+    onError: (e) => toast(e.response?.data?.detail || 'Failed to create', 'error'),
   })
 
   return (
@@ -94,12 +104,14 @@ function Invoices({ orgId }) {
         <div className="space-y-4">
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-ink-700">Company</span>
-            <select value={form.company_id} onChange={(e) => setForm({ ...form, company_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm">
+            <select value={form.company_id} onChange={(e) => setForm({ ...form, company_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-surface px-3 py-2 text-sm">
               <option value="">Select…</option>
               {companies?.items?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </label>
           <Input label="Invoice Number" value={form.invoice_number} onChange={(e) => setForm({ ...form, invoice_number: e.target.value })} placeholder="INV-002" />
+          <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Service retainer" />
+          <Input label="Amount (USD)" type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="1000" />
         </div>
       </Modal>
     </>
@@ -170,7 +182,7 @@ function Revenue({ orgId }) {
 
 function StatCard({ label, value }) {
   return (
-    <div className="rounded-xl border border-ink-200 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-ink-200 bg-surface p-4 shadow-sm">
       <div className="text-xl font-bold text-ink-900">{value}</div>
       <div className="text-xs text-ink-500">{label}</div>
     </div>

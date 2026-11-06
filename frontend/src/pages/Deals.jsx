@@ -15,6 +15,8 @@ export default function Deals() {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
+  const [dragging, setDragging] = useState(null)
+  const [dragOver, setDragOver] = useState(null)
   const [form, setForm] = useState({ company_id: '', pipeline_id: '', stage_id: '', name: '', amount: '' })
 
   const { data: companies } = useQuery({
@@ -92,7 +94,7 @@ export default function Deals() {
         subtitle={view === 'board' ? `${data?.total || 0} deals · $${totalValue.toLocaleString()} total value` : 'Track deals from prospecting to close.'}
         actions={
           <>
-            <div className="flex rounded-lg border border-ink-300 bg-white p-0.5">
+            <div className="flex rounded-lg border border-ink-300 bg-surface p-0.5">
               <button onClick={() => setView('board')} className={`flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium ${view === 'board' ? 'bg-brand-50 text-brand-700' : 'text-ink-500'}`}>
                 <LayoutGrid className="h-3.5 w-3.5" /> Board
               </button>
@@ -111,18 +113,39 @@ export default function Deals() {
             const stageDeals = (data?.items || []).filter((d) => d.stage_id === stage.id)
             const stageValue = stageDeals.reduce((s, d) => s + Number(d.amount || 0), 0)
             return (
-              <div key={stage.id} className="w-64 shrink-0">
-                <div className="mb-2 flex items-center justify-between rounded-lg bg-ink-100 px-3 py-2">
-                  <span className="text-sm font-medium text-ink-700">{stage.name}</span>
-                  <span className="text-xs text-ink-400">{stageDeals.length}</span>
+              <div
+                key={stage.id}
+                className="w-64 shrink-0"
+                onDragOver={(e) => { e.preventDefault(); setDragOver(stage.id) }}
+                onDragLeave={() => setDragOver((o) => (o === stage.id ? null : o))}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setDragOver(null)
+                  if (dragging && dragging.stage_id !== stage.id) {
+                    moveStage.mutate({ id: dragging.id, stageId: stage.id })
+                  }
+                  setDragging(null)
+                }}
+              >
+                <div className={`mb-2 flex items-center justify-between rounded-lg px-3 py-2 ${dragOver === stage.id ? 'bg-brand-100 dark:bg-brand-500/20' : 'bg-ink-100 dark:bg-ink-100/10'}`}>
+                  <span className="text-sm font-medium text-ink-700 dark:text-ink-300">{stage.name}</span>
+                  <span className="text-xs text-ink-400">{stageDeals.length} · ${stageValue.toLocaleString()}</span>
                 </div>
-                <div className="space-y-2">
+                <div className={`min-h-30 rounded-lg space-y-2 ${dragOver === stage.id ? 'bg-brand-50/50 dark:bg-brand-500/5' : ''}`}>
                   {stageDeals.map((d) => (
-                    <div key={d.id} className="group rounded-lg border border-ink-200 bg-white p-3 shadow-sm hover:shadow-md">
+                    <div
+                      key={d.id}
+                      draggable
+                      onDragStart={() => setDragging(d)}
+                      onDragEnd={() => { setDragging(null); setDragOver(null) }}
+                      className={`group cursor-grab rounded-lg border border-ink-200 bg-surface p-3 shadow-sm transition-all hover:shadow-md active:cursor-grabbing dark:border-ink-200/40 ${
+                        dragging?.id === d.id ? 'opacity-50' : ''
+                      }`}
+                    >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <div className="truncate text-sm font-medium text-ink-900">{d.name}</div>
-                          <div className="mt-1 text-sm font-semibold text-brand-600">
+                          <div className="truncate text-sm font-medium text-ink-900 dark:text-ink-200">{d.name}</div>
+                          <div className="mt-1 text-sm font-semibold text-brand-600 dark:text-brand-400">
                             {d.amount ? `$${Number(d.amount).toLocaleString()}` : '—'}
                           </div>
                         </div>
@@ -132,21 +155,18 @@ export default function Deals() {
                         </div>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
-                        <div className="h-1.5 flex-1 rounded-full bg-ink-100">
+                        <div className="h-1.5 flex-1 rounded-full bg-ink-100 dark:bg-ink-100/10">
                           <div className="h-1.5 rounded-full bg-brand-500" style={{ width: `${d.probability}%` }} />
                         </div>
                         <span className="ml-2 text-xs text-ink-400">{d.probability}%</span>
                       </div>
-                      <select
-                        value={d.stage_id}
-                        onChange={(e) => moveStage.mutate({ id: d.id, stageId: e.target.value })}
-                        className="mt-2 w-full rounded border border-ink-200 bg-ink-50 px-1.5 py-1 text-xs text-ink-600"
-                      >
-                        {columns.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-                      </select>
                     </div>
                   ))}
-                  {!stageDeals.length && <div className="rounded-lg border border-dashed border-ink-200 py-6 text-center text-xs text-ink-400">Empty</div>}
+                  {!stageDeals.length && (
+                    <div className="rounded-lg border border-dashed border-ink-200 py-6 text-center text-xs text-ink-400 dark:border-ink-200/40">
+                      Drop deals here
+                    </div>
+                  )}
                 </div>
               </div>
             )
@@ -175,21 +195,21 @@ export default function Deals() {
             <>
               <label className="block">
                 <span className="mb-1 block text-sm font-medium text-ink-700">Company</span>
-                <select value={form.company_id} onChange={(e) => setForm({ ...form, company_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm">
+                <select value={form.company_id} onChange={(e) => setForm({ ...form, company_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-surface px-3 py-2 text-sm">
                   <option value="">Select…</option>
                   {companies?.items?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </label>
               <label className="block">
                 <span className="mb-1 block text-sm font-medium text-ink-700">Pipeline</span>
-                <select value={form.pipeline_id} onChange={(e) => setForm({ ...form, pipeline_id: e.target.value, stage_id: '' })} className="w-full rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm">
+                <select value={form.pipeline_id} onChange={(e) => setForm({ ...form, pipeline_id: e.target.value, stage_id: '' })} className="w-full rounded-lg border border-ink-300 bg-surface px-3 py-2 text-sm">
                   <option value="">Select…</option>
                   {pipelines?.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </label>
               <label className="block">
                 <span className="mb-1 block text-sm font-medium text-ink-700">Stage</span>
-                <select value={form.stage_id} onChange={(e) => setForm({ ...form, stage_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm">
+                <select value={form.stage_id} onChange={(e) => setForm({ ...form, stage_id: e.target.value })} className="w-full rounded-lg border border-ink-300 bg-surface px-3 py-2 text-sm">
                   <option value="">Select…</option>
                   {selectedPipeline?.stages?.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
@@ -214,7 +234,7 @@ export default function Deals() {
 
 function ListView({ data, loading, error, onEdit, onDelete }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-ink-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-ink-200 bg-surface shadow-sm">
       {loading ? (
         <div className="py-16 text-center text-ink-400">Loading…</div>
       ) : error ? (

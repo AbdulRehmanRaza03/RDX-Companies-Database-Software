@@ -70,6 +70,16 @@ def create_campaign(
     return campaign_service.create_campaign(db, organization_id, data, profile.id)
 
 
+@router.delete("/campaigns/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_campaign(
+    campaign_id: uuid.UUID,
+    organization_id: uuid.UUID = Query(...),
+    db: Session = Depends(get_db),
+    profile: Profile = Depends(get_current_profile),
+):
+    campaign_service.delete_campaign(db, organization_id, campaign_id)
+
+
 # --- Enrollments ---
 @router.get("/enrollments", response_model=dict)
 def list_enrollments(

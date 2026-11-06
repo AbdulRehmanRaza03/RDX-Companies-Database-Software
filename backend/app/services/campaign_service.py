@@ -67,6 +67,14 @@ def create_campaign(db: Session, organization_id: uuid.UUID, data, owner_id) -> 
     return c
 
 
+def delete_campaign(db: Session, organization_id: uuid.UUID, campaign_id: uuid.UUID) -> None:
+    campaign = db.get(Campaign, campaign_id)
+    if campaign is None or campaign.organization_id != organization_id:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    db.delete(campaign)
+    db.commit()
+
+
 # --- Enrollments ---
 def enroll_contact(db: Session, organization_id: uuid.UUID, data) -> CampaignEnrollment:
     contact = db.get(Contact, data.contact_id)

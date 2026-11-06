@@ -1,4 +1,4 @@
-import { Badge, Button, Card, EmptyState, Input, Select, Spinner } from './ui.jsx'
+import { Badge, Button, Card, EmptyState, Input, Select, Spinner, TableSkeleton } from './ui.jsx'
 
 function statusVariant(status) {
   const s = (status || '').toLowerCase()
@@ -18,11 +18,7 @@ export function DataTable({
   emptyDescription,
 }) {
   if (loading) {
-    return (
-      <Card className="flex items-center justify-center py-16">
-        <Spinner />
-      </Card>
-    )
+    return <TableSkeleton rows={6} cols={columns.length || 4} />
   }
   if (error) {
     return (
@@ -88,7 +84,7 @@ export function SearchInput({ value, onChange, placeholder = 'Search…' }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-ink-300 bg-white py-2 pl-9 pr-3 text-sm text-ink-900 placeholder-ink-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-400"
+        className="w-full rounded-lg border border-ink-300 bg-surface py-2 pl-9 pr-3 text-sm text-ink-900 placeholder-ink-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-400"
       />
     </div>
   )

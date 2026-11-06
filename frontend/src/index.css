@@ -1,24 +1,61 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-  --color-ink-900: #0f172a;
-  --color-ink-700: #334155;
-  --color-ink-500: #64748b;
-  --color-ink-400: #94a3b8;
-  --color-ink-300: #cbd5e1;
-  --color-ink-200: #e2e8f0;
-  --color-ink-100: #f1f5f9;
-  --color-ink-50: #f8fafc;
+  /* Brand blues */
+  --color-brand-50: #eaf2ff;
+  --color-brand-100: #d6e6ff;
+  --color-brand-200: #b3d1ff;
+  --color-brand-300: #84b4ff;
+  --color-brand-400: #4f8ffc;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1a4fd6;
+  --color-brand-700: #1640b0;
+  --color-brand-800: #143a94;
+  --color-brand-900: #0b1f3a;
+
+  /* Semantic tokens mapping to CSS variables */
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-navy: #0b1f3a;
+  --color-line: var(--border);
+  --color-ink-900: var(--text);
+  --color-ink-700: var(--text-2);
+  --color-ink-500: var(--text-3);
+  --color-ink-400: var(--text-4);
+  --color-ink-300: var(--border);
+  --color-ink-200: var(--border);
+  --color-ink-100: var(--surface-2);
+  --color-ink-50: var(--bg);
+}
+
+:root {
+  /* Light theme — prompt's palette */
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #e5eaf1;
+  --text: #172033;
+  --text-2: #334155;
+  --text-3: #64748b;
+  --text-4: #94a3b8;
+  --primary-navy: #0b1f3a;
+  --primary-blue: #2563eb;
+}
+
+.dark {
+  /* Dark theme — centralized variables */
+  --bg: #0a1220;
+  --surface: #101b2d;
+  --surface-2: #17263a;
+  --border: #24334a;
+  --text: #eef2f7;
+  --text-2: #cbd5e1;
+  --text-3: #94a3b8;
+  --text-4: #64748b;
+  --primary-navy: #0b1f3a;
+  --primary-blue: #4f8ffc;
 }
 
 html,
@@ -29,9 +66,58 @@ body,
 
 body {
   margin: 0;
-  background-color: #f8fafc;
-  color: #0f172a;
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Subtle radial brand glow in the background for premium feel */
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(600px circle at 8% 0%, rgba(37, 99, 235, 0.05), transparent 40%),
+    radial-gradient(700px circle at 100% 100%, rgba(11, 31, 58, 0.04), transparent 45%);
+  z-index: 0;
+}
+.dark #root::before {
+  background:
+    radial-gradient(600px circle at 8% 0%, rgba(79, 143, 252, 0.08), transparent 40%),
+    radial-gradient(700px circle at 100% 100%, rgba(37, 99, 235, 0.06), transparent 45%);
+}
+
+/* Subtle premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-4);
+}
+
+/* Smooth intent-based focus ring */
+:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
